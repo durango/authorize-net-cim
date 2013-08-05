@@ -1,0 +1,31 @@
+{
+  "name": "auth-net-cim",
+  "version": "1.0.0",
+  "description": "Authorize.net CIM bindings for Node.JS",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/durango/authorize-net-cim"
+  },
+  "bugs": {
+    "url": "https://github.com/durango/authorize-net-cim/issues"
+  },
+  "keywords": [
+    "authorize",
+    "authorizenet",
+    "authorize.net",
+    "cim",
+    "authorize cim",
+    "authorize.net cim"
+  ],
+  "author": "Daniel Durante <me@danieldurante.com>",
+  "license": "MIT",
+  "dependencies": {
+    "auth-net-request": "~1.0.0",
+    "auth-net-types": "~1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~1.7.2",
+    "mocha": "~1.12.0"
+  }
+}
