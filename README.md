@@ -1,4 +1,4 @@
-# Authorize.net CIM
+# Authorize.net CIM [![Dependency Status](https://david-dm.org/durango/authorize-net-cim.png)](https://david-dm.org/durango/authorize-net-cim)
 
 Authorize.net CIM bindings for Node.JS
 
@@ -26,7 +26,7 @@ Assuming we're doing:
 
 ```js
 var Authorize = require('auth-net-types')
-  , _AuthorizeCIM = require(_'auth-net-cim')
+  , _AuthorizeCIM = require('auth-net-cim')
   , AuthorizeCIM = new _AuthorizeCIM({
     api: '123',
     key: '124',
