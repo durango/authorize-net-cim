@@ -22,10 +22,10 @@
   "license": "MIT",
   "dependencies": {
     "auth-net-request": "~1.0.0",
-    "auth-net-types": "~1.0.0"
+    "auth-net-types": "~1.0.1"
   },
   "devDependencies": {
-    "chai": "~1.7.2",
-    "mocha": "~1.12.0"
+    "chai": "~1.8.0",
+    "mocha": "~1.13.0"
   }
 }
