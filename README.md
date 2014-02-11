@@ -1,6 +1,6 @@
 # Authorize.net CIM
 
-![Dependency Status](https://david-dm.org/durango/authorize-net-cim.svg?theme=shields.io)](https://david-dm.org/durango/authorize-net-cim) [![devDependency Status](https://david-dm.org/durango/authorize-net-cim/dev-status.svg?theme=shields.io)](https://david-dm.org/durango/authorize-net-cim#info=devDependencies)
+[![Dependency Status](https://david-dm.org/durango/authorize-net-cim.svg?theme=shields.io)](https://david-dm.org/durango/authorize-net-cim) [![devDependency Status](https://david-dm.org/durango/authorize-net-cim/dev-status.svg?theme=shields.io)](https://david-dm.org/durango/authorize-net-cim#info=devDependencies)
 
 Authorize.net CIM bindings for Node.JS
 
