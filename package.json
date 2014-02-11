@@ -1,6 +1,6 @@
 {
   "name": "auth-net-cim",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Authorize.net CIM bindings for Node.JS",
   "main": "index.js",
   "repository": {
