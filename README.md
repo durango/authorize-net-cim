@@ -27,7 +27,7 @@ Authorize.net CIM bindings for Node.JS
 Assuming we're doing:
 
 ```js
-var Authorize = require('auth-net-types')
+var Authorize = require('auth-net-cim')
   , _AuthorizeCIM = require('auth-net-cim')
   , AuthorizeCIM = new _AuthorizeCIM({
     api: '123',
