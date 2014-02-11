@@ -1,4 +1,6 @@
-# Authorize.net CIM [![Dependency Status](https://david-dm.org/durango/authorize-net-cim.png)](https://david-dm.org/durango/authorize-net-cim)
+# Authorize.net CIM
+
+![Dependency Status](https://david-dm.org/durango/authorize-net-cim.svg?theme=shields.io)](https://david-dm.org/durango/authorize-net-cim) [![devDependency Status](https://david-dm.org/durango/authorize-net-cim/dev-status.svg?theme=shields.io)](https://david-dm.org/durango/authorize-net-cim#info=devDependencies)
 
 Authorize.net CIM bindings for Node.JS
 
@@ -8,7 +10,7 @@ Authorize.net CIM bindings for Node.JS
 
 ## Tests
 
-    AUTH_CONFIG=/path/to/config.json make test
+    AUTH_CONFIG=/path/to/config.json make tests
 
 **config.json**
 

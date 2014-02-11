@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/durango/authorize-net-cim"
   },
+  "scripts": {
+    "test": "make tests"
+  },
   "bugs": {
     "url": "https://github.com/durango/authorize-net-cim/issues"
   },
@@ -22,10 +25,10 @@
   "license": "MIT",
   "dependencies": {
     "auth-net-request": "~1.0.0",
-    "auth-net-types": "~1.0.1"
+    "auth-net-types": "~1.0.2"
   },
   "devDependencies": {
-    "chai": "~1.8.0",
-    "mocha": "~1.13.0"
+    "chai": "~1.9.0",
+    "mocha": "~1.17.1"
   }
 }
