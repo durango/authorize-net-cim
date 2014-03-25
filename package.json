@@ -24,11 +24,11 @@
   "author": "Daniel Durante <me@danieldurante.com>",
   "license": "MIT",
   "dependencies": {
-    "auth-net-request": "~1.0.0",
+    "auth-net-request": "~0.2.3",
     "auth-net-types": "~1.0.2"
   },
   "devDependencies": {
     "chai": "~1.9.0",
-    "mocha": "~1.17.1"
+    "mocha": "^1.18.2"
   }
 }
