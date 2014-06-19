@@ -351,7 +351,7 @@ describe('AuthorizeNetCIM', function() {
             expect(res.messages.message.text).to.equal('Successful.');
 
             expect(res.profile).to.exist;
-            expect(res.profile.merchantCustomerId).to.equal(1234);
+            expect(res.profile.merchantCustomerId).to.equal('1234');
             expect(res.profile.description).to.equal('New description!');
             expect(res.profile.email).to.equal('newfakeemail@email.com');
             expect(res.profile.customerProfileId).to.equal(self.customerProfileId);
@@ -585,7 +585,7 @@ describe('AuthorizeNetCIM', function() {
             expect(res.address.address).to.not.exist;
             expect(res.address.city).to.not.exist;
             expect(res.address.state).to.equal('TX');
-            expect(res.address.zip).to.equal(11111);
+            expect(res.address.zip).to.equal('11111');
             expect(res.address.country).to.equal('US');
             expect(res.address.customerAddressId).to.equal(self.customerAddressId);
 
@@ -643,8 +643,8 @@ describe('AuthorizeNetCIM', function() {
           expect(res.messages.message.text).to.equal('Successful.');
 
           expect(res.profile).to.exist;
-          expect(res.profile.merchantCustomerId).to.equal(self.id);
-          expect(res.profile.email).to.equal('fakeemail' + self.id + '@fakemeail.com');
+          expect(res.profile.merchantCustomerId).to.equal(self.id.toString());
+          expect(res.profile.email).to.equal('fakeemail' + self.id.toString() + '@fakemeail.com');
           expect(res.profile.customerProfileId).to.equal(self.customerProfileId);
           expect(res.profile.paymentProfiles).to.be.an('object');
           done();
@@ -744,7 +744,7 @@ describe('AuthorizeNetCIM', function() {
 
           expect(res.paymentProfile).to.exist;
           expect(res.paymentProfile.customerType).to.equal('individual');
-          expect(res.paymentProfile.customerPaymentProfileId).to.equal(self.customerPaymentProfileId);
+          expect(res.paymentProfile.customerPaymentProfileId).to.equal(self.customerPaymentProfileId.toString());
           expect(res.paymentProfile.payment).to.be.an('object');
           expect(res.paymentProfile.payment.creditCard).to.be.an('object');
           expect(res.paymentProfile.payment.creditCard.cardNumber).to.equal('XXXX1111');
@@ -820,9 +820,9 @@ describe('AuthorizeNetCIM', function() {
           expect(res.address.address).to.equal('123 Sesame St');
           expect(res.address.city).to.equal('Gainesville');
           expect(res.address.state).to.equal('FL');
-          expect(res.address.zip).to.equal(32601);
+          expect(res.address.zip).to.equal('32601');
           expect(res.address.country).to.equal('us');
-          expect(res.address.customerAddressId).to.equal(self.customerAddressId);
+          expect(res.address.customerAddressId).to.equal(self.customerAddressId.toString());
 
           done();
         });
