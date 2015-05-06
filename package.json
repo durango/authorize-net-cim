@@ -28,7 +28,7 @@
     "auth-net-types": "^1.1.0"
   },
   "devDependencies": {
-    "chai": "^1.10.0",
-    "mocha": "^2.0.1"
+    "chai": "^2.3.0",
+    "mocha": "^2.2.0"
   }
 }
