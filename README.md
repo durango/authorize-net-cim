@@ -233,6 +233,19 @@ AuthorizeCIM.deleteCustomerShippingAddress({
 AuthorizeCIM.deleteCustomerProfile('123', function(err, response) {});
 ```
 
+### setExtraOptions
+```js
+AuthorizeCIM.setExtraOptions({
+  x_duplicate_window: 0
+});
+```
+```js
+AuthorizeCIM.createCustomerProfileTransaction(..., function(err) {
+  // Then clear the extra options if needed
+  AuthorizeCIM.setExtraOptions();
+});
+```
+
 ## Note
 
 Version `>= 2.x.x` has a breaking change, all values are returned as strings rather than strings and numbers (unless the value is an object, array, etc).
