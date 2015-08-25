@@ -6,7 +6,7 @@ var chai = require('chai')
   , _AuthorizeCIM = require(__dirname + '/../index')
   , AuthorizeCIM = new _AuthorizeCIM(config);
 
-chai.Assertion.includeStack = true;
+chai.config.includeStack = true;
 
 // let's just quickly make 10 basic profiles
 var id = (new Date().getTime())
@@ -430,7 +430,7 @@ describe('AuthorizeNetCIM', function() {
         }, function(err, res) {
           expect(err).to.exist;
           expect(err.code).to.equal('E00040');
-          expect(err.text).to.equal('The record cannot be found.');
+          expect(err.message).to.match(/The record cannot be found./);
           expect(res).to.not.exist;
           done();
         });
@@ -539,7 +539,7 @@ describe('AuthorizeNetCIM', function() {
         }, function(err, res) {
           expect(err).to.exist;
           expect(err.code).to.equal('E00014');
-          expect(err.text).to.equal('Customer Address ID is required.');
+          expect(err.message).to.match(/Customer Address ID is required./);
           expect(res).to.not.exist;
           done();
         });
@@ -830,7 +830,7 @@ describe('AuthorizeNetCIM', function() {
     });
   });
 
-  describe('transactions', function() {
+  describe('#transactions', function() {
     describe('#validateCustomerPaymentProfile', function() {
       before(function(done) {
         var self = this
@@ -951,7 +951,7 @@ describe('AuthorizeNetCIM', function() {
       it('should return an error when we don\'t provide a correct transactionType', function(done) {
         expect(function() {
           AuthorizeCIM.createCustomerProfileTransaction('fake', {}, function(){});
-        }).to.throw(Error, 'Invalid transactionType. Must be: AuthCapture, AuthOnly, CaptureOnly, or PriorAuthCapture');
+        }).to.throw(Error, 'Invalid transactionType. Must be: AuthOnly, AuthCapture, CaptureOnly, PriorAuthCapture, Refund, Void');
         done();
       });
 
@@ -985,6 +985,7 @@ describe('AuthorizeNetCIM', function() {
         AuthorizeCIM.createCustomerProfileTransaction('AuthCapture', transaction, function(err, res) {
           expect(err).to.be.not.exist;
           expect(res).to.exist;
+
           expect(res.messages).to.exist;
           expect(res.messages.message).to.exist;
           expect(res.messages.resultCode).to.equal('Ok');
@@ -1039,7 +1040,7 @@ describe('AuthorizeNetCIM', function() {
         }, function(err, res) {
           expect(err).to.exist;
           expect(err.code).to.equal('E00027');
-          expect(err.text).to.equal('The specified SplitTenderID is invalid.');
+          expect(err.message).to.match(/The specified SplitTenderID is invalid./);
           expect(res).to.not.exist;
           done();
         });
