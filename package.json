@@ -24,7 +24,7 @@
   "author": "Daniel Durante <me@danieldurante.com>",
   "license": "MIT",
   "dependencies": {
-    "auth-net-request": "2.2.2",
+    "auth-net-request": "2.2.3",
     "auth-net-types": "^1.1.0"
   },
   "devDependencies": {
