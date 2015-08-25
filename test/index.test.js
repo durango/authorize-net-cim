@@ -3,10 +3,11 @@ var chai = require('chai')
   , path = require('path')
   , config = require(path.resolve(process.env.AUTH_CONFIG))
   , Authorize = require('auth-net-types')
+  , request = require('request')
   , _AuthorizeCIM = require(__dirname + '/../index')
   , AuthorizeCIM = new _AuthorizeCIM(config);
 
-chai.Assertion.includeStack = true;
+chai.config.includeStack = true;
 
 // let's just quickly make 10 basic profiles
 var id = (new Date().getTime())
@@ -157,6 +158,73 @@ describe('AuthorizeNetCIM', function() {
           profiles[3].customerProfileId = resp.customerProfileId;
           done();
         });
+      });
+    });
+
+    describe('#createCustomerProfileFromTransaction', function() {
+      var transId = 0;
+      before(function(done) {
+        // Submit a transaction to Authorize.net
+
+        var date = new Date();
+        var mailid = date.getTime() + Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+        var apiUrl;
+        if (config.sandbox) {
+          apiUrl = 'https://test.authorize.net/gateway/transact.dll';
+        } else {
+          apiUrl = 'https://secure2.authorize.net/gateway/transact.dll';
+        }
+        var amount = Math.floor(Math.random() *100) + '.' + Math.floor(Math.random() *100);
+        var transactionReq = {
+          x_login: config.api,
+          x_tran_key: config.key,
+          x_type: 'AUTH_CAPTURE',
+          x_amount: amount,
+          x_card_num: '4111111111111111',
+          x_exp_date: (date.getFullYear()+1) + '-10',
+          x_first_name: 'Bob',
+          x_last_name: 'Smith',
+          x_email: 'fakeemail' + mailid + '@fakemeail.com',
+          x_delim_data: 'TRUE',
+          x_relay_response: 'FALSE'
+        };
+        request.post(apiUrl, {form: transactionReq} , function(err, response, body) {
+          if (err) {
+            console.log('ERROR: ' + err);
+          } else {
+            transId = body.split(',')[6];
+          }
+          done();
+        });
+      });
+      
+      it('should create a customer profile and payment profile based on a successful transaction', function(done) {
+        AuthorizeCIM.createCustomerProfileFromTransaction({transactionId: transId}, function(err, resp) {
+          expect(err).to.be.not.exist;
+          expect(resp).to.exist;
+          expect(resp.messages.message.code).to.equal('I00001');
+          expect(resp.messages.message.text).to.equal('Successful.');
+          expect(resp.customerProfileId).to.exist;
+          expect(resp.customerPaymentProfileIdList).to.exist;
+          expect(resp.customerPaymentProfileIdList.numericString).to.exist;
+          done();
+        });
+      });
+
+      it('should give an error for invalid transactionId when creating a new customer profile based on a fake transactionId', function(done) {
+        AuthorizeCIM.createCustomerProfileFromTransaction({transactionId: 1234567}, function(err, resp) {
+          expect(err).to.exist;
+          expect(err.code).to.equal('E00099');
+          expect(err.message).to.match(/This transaction ID is invalid./);
+          done();
+        });
+      });
+
+      it('should throw error if the transactionId is not given', function(done) {
+        expect(function() {
+          AuthorizeCIM.createCustomerProfileFromTransaction({}, (function() {}));
+        }).to.throw(Error, 'You must provide a transactionId.');
+        done();
       });
     });
 
@@ -430,7 +498,7 @@ describe('AuthorizeNetCIM', function() {
         }, function(err, res) {
           expect(err).to.exist;
           expect(err.code).to.equal('E00040');
-          expect(err.text).to.equal('The record cannot be found.');
+          expect(err.message).to.match(/The record cannot be found./);
           expect(res).to.not.exist;
           done();
         });
@@ -539,7 +607,7 @@ describe('AuthorizeNetCIM', function() {
         }, function(err, res) {
           expect(err).to.exist;
           expect(err.code).to.equal('E00014');
-          expect(err.text).to.equal('Customer Address ID is required.');
+          expect(err.message).to.match(/Customer Address ID is required./);
           expect(res).to.not.exist;
           done();
         });
@@ -830,7 +898,7 @@ describe('AuthorizeNetCIM', function() {
     });
   });
 
-  describe('transactions', function() {
+  describe('#transactions', function() {
     describe('#validateCustomerPaymentProfile', function() {
       before(function(done) {
         var self = this
@@ -914,11 +982,16 @@ describe('AuthorizeNetCIM', function() {
     });
 
     describe('#createCustomerProfileTransaction', function() {
+      var transId;
+      var customerProfileId;
+      var customerPaymentProfileId;
+
       before(function(done) {
         var self = this
           , date = (new Date())
           , expiration = (date.getFullYear()+1) + '-10'
-          , id = (new Date()).getTime() + Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+          , id = (new Date()).getTime() + Math.floor(Math.random() * (100 - 10 + 1)) + 10
+          , transId = null;
 
         AuthorizeCIM.createCustomerProfile({
           description: 'A simple description',
@@ -935,8 +1008,8 @@ describe('AuthorizeNetCIM', function() {
           })
         }, function(err, res) {
           self.expirationDate = expiration;
-          self.customerProfileId = res.customerProfileId;
-          self.customerPaymentProfileId = res.customerPaymentProfileIdList.numericString;
+          customerProfileId = self.customerProfileId = res.customerProfileId;
+          customerPaymentProfileId = self.customerPaymentProfileId = res.customerPaymentProfileIdList.numericString;
           done();
         });
       });
@@ -951,7 +1024,7 @@ describe('AuthorizeNetCIM', function() {
       it('should return an error when we don\'t provide a correct transactionType', function(done) {
         expect(function() {
           AuthorizeCIM.createCustomerProfileTransaction('fake', {}, function(){});
-        }).to.throw(Error, 'Invalid transactionType. Must be: AuthCapture, AuthOnly, CaptureOnly, or PriorAuthCapture');
+        }).to.throw(Error, 'Invalid transactionType. Must be: AuthOnly, AuthCapture, CaptureOnly, PriorAuthCapture, Refund, Void');
         done();
       });
 
@@ -985,12 +1058,14 @@ describe('AuthorizeNetCIM', function() {
         AuthorizeCIM.createCustomerProfileTransaction('AuthCapture', transaction, function(err, res) {
           expect(err).to.be.not.exist;
           expect(res).to.exist;
+
           expect(res.messages).to.exist;
           expect(res.messages.message).to.exist;
           expect(res.messages.resultCode).to.equal('Ok');
           expect(res.messages.message.code).to.equal('I00001');
           expect(res.messages.message.text).to.equal('Successful.');
           expect(res.directResponse).to.exist;
+          transId = res.directResponse.split(',')[6];
           done();
         });
       });
@@ -1039,7 +1114,7 @@ describe('AuthorizeNetCIM', function() {
         }, function(err, res) {
           expect(err).to.exist;
           expect(err.code).to.equal('E00027');
-          expect(err.text).to.equal('The specified SplitTenderID is invalid.');
+          expect(err.message).to.match(/The specified SplitTenderID is invalid./);
           expect(res).to.not.exist;
           done();
         });
