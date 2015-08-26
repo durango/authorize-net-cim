@@ -77,12 +77,12 @@ AuthorizeNetCIM.createCustomerProfile({customerProfile: profile}, function(err, 
 ```js
 var options = {
   customerType: 'individual',
-  payment: new Authorize.Payment({
+  payment: {
     creditCard: new Authorize.CreditCard({
       cardNumber: '4111111111111111',
       expirationDate: '2012-10'
     })
-  })
+  }
 }
 
 AuthorizeCIM.createCustomerPaymentProfile({
