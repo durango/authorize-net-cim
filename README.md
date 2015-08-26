@@ -91,6 +91,13 @@ AuthorizeCIM.createCustomerPaymentProfile({
 }, function(err, response) {});
 ```
 
+### createCustomerProfileFromTransaction
+```js
+AuthorizeNetCIM.createCustomerProfileFromTransaction({customerProfile: {
+  transactionId: 1234
+}}, function(err, response){})
+```
+
 ### createCustomerShippingAddress
 ```js
 AuthorizeCIM.createCustomerShippingAddress({
