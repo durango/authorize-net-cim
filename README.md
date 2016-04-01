@@ -77,18 +77,25 @@ AuthorizeNetCIM.createCustomerProfile({customerProfile: profile}, function(err, 
 ```js
 var options = {
   customerType: 'individual',
-  payment: new Authorize.Payment({
+  payment: {
     creditCard: new Authorize.CreditCard({
       cardNumber: '4111111111111111',
       expirationDate: '2012-10'
     })
-  })
+  }
 }
 
 AuthorizeCIM.createCustomerPaymentProfile({
   customerProfileId: '123',
   paymentProfile: options
 }, function(err, response) {});
+```
+
+### createCustomerProfileFromTransaction
+```js
+AuthorizeNetCIM.createCustomerProfileFromTransaction({customerProfile: {
+  transactionId: 1234
+}}, function(err, response){})
 ```
 
 ### createCustomerShippingAddress
@@ -231,6 +238,19 @@ AuthorizeCIM.deleteCustomerShippingAddress({
 ### deleteCustomerProfile
 ```js
 AuthorizeCIM.deleteCustomerProfile('123', function(err, response) {});
+```
+
+### setExtraOptions
+```js
+AuthorizeCIM.setExtraOptions({
+  x_duplicate_window: 0
+});
+```
+```js
+AuthorizeCIM.createCustomerProfileTransaction(..., function(err) {
+  // Then clear the extra options if needed
+  AuthorizeCIM.setExtraOptions();
+});
 ```
 
 ## Note
