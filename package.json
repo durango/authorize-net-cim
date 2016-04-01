@@ -25,7 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "auth-net-request": "2.2.3",
-    "auth-net-types": "^1.1.0"
+    "auth-net-types": "^1.2.0"
   },
   "devDependencies": {
     "chai": "^2.3.0",
