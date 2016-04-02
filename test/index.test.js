@@ -190,7 +190,7 @@ describe('AuthorizeNetCIM', function() {
         };
         request.post(apiUrl, {form: transactionReq} , function(err, response, body) {
           if (err) {
-            console.log('ERROR: ' + err);
+            done(err);
           } else {
             transId = body.split(',')[6];
           }
@@ -1161,7 +1161,6 @@ describe('AuthorizeNetCIM', function() {
         AuthorizeCIM.getHostedProfilePageRequest({
           customerProfileId: 1234,
         }, function(err, res) {
-          console.log(err.toString());
           expect(err).to.exist;
           expect(err.code).to.equal('E00040');
           expect(err.message).to.contain('The record cannot be found.');
@@ -1184,7 +1183,6 @@ describe('AuthorizeNetCIM', function() {
         expect(res.messages.message.text).to.equal('Successful.');
 
         expect(res.token).to.be.an('string');
-        console.log(res.token);
 
         done();
       });
