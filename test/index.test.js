@@ -190,14 +190,14 @@ describe('AuthorizeNetCIM', function() {
         };
         request.post(apiUrl, {form: transactionReq} , function(err, response, body) {
           if (err) {
-            console.log('ERROR: ' + err);
+            done(err);
           } else {
             transId = body.split(',')[6];
           }
           done();
         });
       });
-      
+
       it('should create a customer profile and payment profile based on a successful transaction', function(done) {
         AuthorizeCIM.createCustomerProfileFromTransaction({transactionId: transId}, function(err, resp) {
           expect(err).to.be.not.exist;
@@ -1122,6 +1122,72 @@ describe('AuthorizeNetCIM', function() {
     });
   });
 
+  describe('#getHostedProfilePageRequest', function () {
+    before(function(done) {
+      var self = this
+        , date = (new Date())
+        , expiration = (date.getFullYear()+1) + '-10'
+        , id = (new Date()).getTime() + Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+
+      AuthorizeCIM.createCustomerProfile({customerProfile: {
+        description: 'A simple description',
+        merchantCustomerId: id,
+        email: 'fakeemail' + id + '@fakemeail.com',
+        paymentProfiles: new Authorize.PaymentProfiles({
+          customerType: 'individual',
+          payment: new Authorize.Payment({
+            creditCard: new Authorize.CreditCard({
+              cardNumber: '4111111111111117',
+              expirationDate: expiration
+            })
+          })
+        })
+      }}, function(err, res) {
+        self.expirationDate = expiration;
+        self.customerProfileId = res.customerProfileId;
+        self.customerPaymentProfileId = res.customerPaymentProfileIdList.numericString;
+        done();
+      });
+    });
+
+    it('should give us an error when we forget to enter in the customerProfileId', function(done) {
+      expect(function() {
+        AuthorizeCIM.getHostedProfilePageRequest(function(){})
+      }).to.throw(Error, 'You must enter in a customerProfileId.');
+      done();
+    });
+
+    it('should return an error message saying the customerProfileId is invalid', function(done) {
+        AuthorizeCIM.getHostedProfilePageRequest({
+          customerProfileId: 1234,
+        }, function(err, res) {
+          expect(err).to.exist;
+          expect(err.code).to.equal('E00040');
+          expect(err.message).to.contain('The record cannot be found.');
+          expect(res).to.not.exist;
+          done();
+        });
+      });
+
+    it('should give us a shipping profile', function(done) {
+      var self = this;
+      AuthorizeCIM.getHostedProfilePageRequest({
+        customerProfileId: this.customerProfileId
+      }, function(err, res) {
+        expect(err).to.not.exist;
+        expect(res).to.exist;
+        expect(res.messages).to.exist;
+        expect(res.messages.message).to.exist;
+        expect(res.messages.resultCode).to.equal('Ok');
+        expect(res.messages.message.code).to.equal('I00001');
+        expect(res.messages.message.text).to.equal('Successful.');
+
+        expect(res.token).to.be.an('string');
+
+        done();
+      });
+    });
+  });
 
   describe('#delete', function() {
     describe('#deleteCustomerPaymentProfile', function() {
